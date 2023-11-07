@@ -109,7 +109,11 @@ recursive_retriever = RecursiveRetriever(
     verbose=True,
 )
 
-response_synthesizer = get_response_synthesizer(response_mode="compact")
+# best responses to streamlit
+# - get_response_synthesizer(structured_answer_filtering=True) - BEST!
+# - get_response_synthesizer(response_mode="compact") - OK
+# - get_response_synthesizer(response_mode="refine") - summarized
+response_synthesizer = get_response_synthesizer(structured_answer_filtering=True)
 
 # define query engine
 query_engine = RetrieverQueryEngine.from_args(
@@ -129,10 +133,14 @@ def main():
     if st.button('Search'):
         with st.spinner('Searching...'):
             # Assuming query_engine is already set up as per your original code
-            response = query_engine.query(query)
-            st.write(response)  # Display the response in the app
+            response_object = query_engine.query(query)
+            
+            # Access the 'response' attribute of the response object
+            response_text = response_object.response if hasattr(response_object, 'response') else "No response text found."
+            
+            # Use markdown to display the response with text wrapping
+            st.markdown(response_text)
 
 # Run the Streamlit app
 if __name__ == '__main__':
     main()
-
