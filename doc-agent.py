@@ -1,3 +1,4 @@
+import streamlit as st
 from llama_index import (
     VectorStoreIndex,
     ListIndex,
@@ -117,10 +118,21 @@ query_engine = RetrieverQueryEngine.from_args(
     service_context=service_context,
 )
 
-response = query_engine.query("Give me a summary of DevOps self-service-centric pipeline security and guardrails.")
-print(response)
+# Streamlit app starts here
+def main():
+    st.title('Document Query Interface')
 
-response = query_engine.query("What is Harden Runner in DevOps self-service-centric pipeline security and guardrails?")
-print(response)
+    # Text input for the query
+    query = st.text_input('Enter your query:', '')
 
+    # Button to trigger the search
+    if st.button('Search'):
+        with st.spinner('Searching...'):
+            # Assuming query_engine is already set up as per your original code
+            response = query_engine.query(query)
+            st.write(response)  # Display the response in the app
+
+# Run the Streamlit app
+if __name__ == '__main__':
+    main()
 
