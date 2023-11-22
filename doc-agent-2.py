@@ -85,24 +85,32 @@ def wrap_text(text, width):
     return textwrap.fill(text, width)
 
 # User-defined line width
-line_width = int(input("Enter the desired line width for responses: "))
+# line_width = int(input("Enter the desired line width for responses: "))
 
-# User Interface
 def user_interface():
-    print("Welcome to the Document Query Interface. Type 'TERMINATE' to exit.")
-    
+
     # Request for line width input
-    line_width = int(input("Enter the desired line width for responses: "))
-    
+    try:
+        line_width = int(input("Enter the desired line width for responses: "))
+    except ValueError:
+        print("Invalid input for line width. Using default width of 80.")
+        line_width = 80
+        
+    print("Welcome to the Document Query Interface! Type 'TERMINATE' to exit.")
+
     while True:
         query = input("Enter your query (or type 'TERMINATE' to exit): ")
         if query.upper() == 'TERMINATE':
-            print("Exiting the program.")
             break
-        
+
         response = query_engine.query(query)
+
+        # Ensure the response is a string
+        if not isinstance(response, str):
+            response = str(response)
+
         wrapped_response = wrap_text(response, line_width)
         print(wrapped_response)
-        
+                
 if __name__ == '__main__':
     user_interface()
